@@ -31,7 +31,7 @@ function init() {
   qa('[data-cfg]', function (e) {                       // data-cfg="KHOÁ": điền chữ (meta: điền content); trống → giữ chữ có sẵn
     var v = cfg(e.getAttribute('data-cfg'));
     if (!v) return;
-    if (e.tagName === 'META') e.setAttribute('content', v);
+    if (e.tagName === 'META') e.setAttribute('content', v + (e.getAttribute('data-cfg-sau') || ''));
     else e.textContent = v + (e.getAttribute('data-cfg-sau') || '');
   });
   var brandA = document.querySelector('.isl-brand');
@@ -63,7 +63,7 @@ function init() {
     img.src = m.src;
   });
 
-  // ───────── #lien-he: 4 kênh (có giá trị → link; trống → "Đang cập nhật") ─────────
+  // ───────── #lien-he: 4 kênh. Trống hết → ẩn danh sách, hiện khối "Sắp mở đăng ký" (HTML mặc định). Có ≥ 1 kênh → ẩn khối đó, chỉ hiện ô của kênh có giá trị ─────────
   var CH = {
     SIGNUP_URL: { text: 'Đăng ký dùng thử' },
     CONTACT_EMAIL: { mail: true },
@@ -75,14 +75,19 @@ function init() {
     var k = li.getAttribute('data-ch'), d = CH[k], val = li.querySelector('.lh-val');
     if (!d || !val) return;
     var ok = d.mail ? mailAddr(cfg(k)) : webUrl(cfg(k));
-    if (!ok) return;
+    if (!ok) { li.hidden = true; return; }
     anyCh = true;
     var a = document.createElement('a');
     a.href = d.mail ? 'mailto:' + ok : ok;
     a.textContent = d.mail ? ok : d.text;
     if (!d.mail) { a.target = '_blank'; a.rel = 'noopener'; }
-    val.classList.remove('pending'); val.textContent = ''; val.appendChild(a);
+    val.textContent = ''; val.appendChild(a);
+    li.hidden = false;
   });
+  var lhList = document.querySelector('#lien-he .lh-list'), lhSoon = document.querySelector('#lien-he .cta-actions'), lhNote = document.getElementById('soon-note');
+  if (lhList) lhList.hidden = !anyCh;
+  if (lhSoon) lhSoon.hidden = anyCh;
+  if (lhNote) lhNote.hidden = anyCh;
   var lhSub = document.querySelector('#lien-he .sub');
   if (lhSub) lhSub.textContent = anyCh ? 'Muốn dùng thử, hỏi thêm hoặc góp ý? Nhắn cho chúng tôi qua một trong các kênh dưới đây.' : 'Kênh liên hệ đang cập nhật.';
 
@@ -596,7 +601,7 @@ function init() {
       fb.className = 'xt-fallback';
       var note = fb.querySelector('.xt-fb-note') || fb.appendChild(document.createElement('p'));
       note.className = 'xt-fb-note';
-      note.textContent = 'Máy hoặc trình duyệt này chưa chạy được 3D (WebGL), nên đây là ảnh chụp phòng mẫu. Mô phỏng trên web — không phải hình chụp từ app.';
+      note.textContent = 'Máy hoặc trình duyệt này chưa chạy được 3D (WebGL), nên đây là ảnh chụp phòng mẫu. Mô phỏng trên web — dựng bằng code để minh hoạ, không phải giao diện app.';
       var fbImg = fb.querySelector('img'); if (fbImg) fbImg.loading = 'eager';
       xtStage.appendChild(fb);
     };
@@ -621,10 +626,15 @@ function init() {
       } catch (e) { xtFallback(); }
     };
     if ('IntersectionObserver' in window) {
-      var xtIo = new IntersectionObserver(function (es) {
-        if (es.some(function (e) { return e.isIntersecting; })) { xtIo.disconnect(); xtBoot(); }
-      }, { rootMargin: '600px 0px 600px 0px' });
-      xtIo.observe(xtStage);
+      // Chỉ bắt đầu theo dõi sau sự kiện load + lúc trình duyệt rảnh (tối đa ~1,5 s): chữ đầu trang và ảnh được tải trước, 3D khởi động sau.
+      var xtWatch = function () {
+        var xtIo = new IntersectionObserver(function (es) {
+          if (es.some(function (e) { return e.isIntersecting; })) { xtIo.disconnect(); xtBoot(); }
+        }, { rootMargin: '600px 0px 600px 0px' });
+        xtIo.observe(xtStage);
+      };
+      var xtIdle = function () { if (window.requestIdleCallback) window.requestIdleCallback(xtWatch, { timeout: 1500 }); else setTimeout(xtWatch, 200); };
+      if (document.readyState === 'complete') xtIdle(); else window.addEventListener('load', xtIdle, { once: true });
     } else xtFallback();
   }
 }

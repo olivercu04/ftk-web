@@ -10,9 +10,9 @@ Mọi thứ cần sửa nằm trong `config.js`; mỗi khoá có một dòng ch�
 |---|---|
 | `APP_NAME` | Tên đầy đủ: `<title>` và chân trang |
 | `APP_SHORT` | Tên ngắn "FTK": thanh island, hỏi đáp, bản quyền |
-| `TAGLINE` | Câu mô tả trang (meta description) |
+| `TAGLINE` | Câu mô tả trang (meta description). Thẻ chia sẻ `og:*` / `twitter:card` nằm cứng trong `<head>` của `index.html`: `og:title` theo `APP_NAME`, còn `og:url` và `og:description` sửa tay |
 | `SIGNUP_URL` | Link form đăng ký. Trống: nút "Đăng ký dùng thử" cuộn tới mục Liên hệ |
-| `CONTACT_EMAIL`, `ZALO_URL`, `FACEBOOK_URL` | Kênh ở mục Liên hệ. Trống: hiện "Đang cập nhật" |
+| `CONTACT_EMAIL`, `ZALO_URL`, `FACEBOOK_URL` | Kênh ở mục Liên hệ. Trống: ẩn ô của kênh đó; cả 4 kênh (kể cả `SIGNUP_URL`) trống thì mục Liên hệ hiện nút "Sắp mở đăng ký" |
 | `YOUTUBE_ID` | Mã video YouTube. Trống: không có ô video |
 | `SHOW_AI_TEASER` | `true`: hiện khối "sắp có" (`#ai-sap-co`) và mục menu |
 | `SHOW_ANH_APP` | `true`: hiện ảnh giao diện app và khối "Xem thao tác" |

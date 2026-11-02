@@ -73,6 +73,8 @@
     scroll-padding-top: 80px;
     background: var(--bg);
   }
+  /* mở thẳng một anchor (/#hoi-dap): cú nhảy lúc tải là tức thời, không lướt qua các khối ở giữa (class do script đầu <head> gắn, gỡ sau load) */
+  html.nhay-tuc-thi { scroll-behavior: auto; }
   body {
     margin: 0;
     color: var(--text);
@@ -144,6 +146,7 @@
       -webkit-background-clip: text; background-clip: text;
       color: transparent; -webkit-text-fill-color: transparent;
       padding-block: .25em; margin-block: -.25em;
+      padding-inline: .1em;   /* sừng chữ ư / ơ cuối dòng vượt ra ngoài bề rộng chữ → không có đệm thì bị cắt (vd "thử") */
     }
   }
 
@@ -699,6 +702,8 @@
   }
   .xt-stage.is-fallback .xt-ui, .xt-stage.is-fallback .xt-canvas { display: none; }
 
+  /* máy tính bảng dọc (768–1023): bảng Ngày/Đêm + góc nhìn rộng ~550px đè lên thẻ Phòng mẫu → thẻ xuống dưới thanh */
+  @media (min-width: 768px) and (max-width: 1023.98px) { .xt-info { top: 74px; } }
   @media (max-width: 1023.98px) {
     .xt-info { width: 260px; }
     .xt-title, .xt-meta { display: none; }
@@ -708,7 +713,7 @@
     .xt-stage { height: clamp(500px, 80svh, 660px); }
     .xt-info { left: 10px; right: 10px; top: 10px; width: auto; display: flex; align-items: center; gap: 10px; padding: 8px 8px 8px 12px; }
     .xt-info .xt-over { display: none; }
-    .xt-sim { flex: 1; min-width: 0; margin: 0; font-size: 12.5px; line-height: 1.4; }
+    .xt-sim { flex: 1; min-width: 0; margin: 0; font-size: 14px; line-height: 1.4; }
     .xt-sim svg { display: none; }
     .xt-all { display: none; }
     .xt-stage.is-touch:not(.is-touch-on) .xt-hint { opacity: 0; }
@@ -730,10 +735,12 @@
     .xt-play-txt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
     .xt-time { display: none; }
     .xt-moc { font-size: 14px; }
-    .xt-moc-sub { font-size: 12.5px; }
+    /* dòng phụ có tiền tố "Mô phỏng · " dài hơn 1 dòng trên điện thoại: cho xuống tối đa 2 dòng, giữ chỗ cố định để dock không nhảy cao thấp giữa các mốc */
+    .xt-moc-sub { font-size: 12.5px; white-space: normal; min-height: 2.9em; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
     .xt-range { height: 26px; }
     .xt-tick b { display: none; }
-    .xt-hint, .xt-kho { bottom: 102px; }
+    .xt-hint, .xt-kho { bottom: 120px; }
+    .xt-stage.is-touch .xt-touch { padding-bottom: 130px; }
     .xt-hint { font-size: 12.5px; }
     .xt-kho { padding-left: 12px; }
     .xt-kho [data-k]:not(.is-on) { display: none; }
@@ -869,13 +876,6 @@
   .spec dt { font: 500 12px/1.4 var(--f-body); letter-spacing: .06em; text-transform: uppercase; color: var(--text-3); }
   .spec dd { margin: 6px 0 0; font: 600 20px/1.3 var(--f-head); }
   .spec dd.pending { color: var(--text-2); font-size: 18px; font-weight: 500; }
-  .install-note {
-    grid-column: 1 / -1;
-    display: flex; gap: 10px; align-items: flex-start;
-    margin: 0; padding-top: 20px; border-top: 1px solid rgb(255 255 255 / .09);
-    color: var(--text-2); font-size: 15px; line-height: 1.55;
-  }
-  .install-note svg { flex: none; margin-top: 2px; color: var(--accent); }
 
   /* ───────── #hoi-dap ───────── */
   .faq { padding: 4px 28px; }
@@ -927,9 +927,18 @@
   .lh-item { min-width: 0; padding: 16px 18px; border-radius: 14px; background: rgb(255 255 255 / .04); box-shadow: inset 0 0 0 1px rgb(255 255 255 / .09); }
   .lh-lbl { display: block; font: 500 12px/1.4 var(--f-body); letter-spacing: .06em; text-transform: uppercase; color: var(--text-3); }
   .lh-val { display: block; margin-top: 6px; font: 600 17px/1.35 var(--f-head); overflow-wrap: anywhere; }
-  .lh-val.pending { color: var(--text-2); font-size: 16px; font-weight: 500; }
   .lh-val a { color: var(--accent); text-underline-offset: 3px; }
   .lh-val a:hover { color: var(--accent-txt); }
+  /* chưa có kênh nào: nút "Sắp mở đăng ký" (không bấm được) + ghi chú */
+  .cta-actions { margin-top: 32px; display: flex; justify-content: center; }
+  .btn-soon {
+    background: rgb(255 255 255 / .05); color: var(--text-2);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / .2);
+    cursor: not-allowed;
+  }
+  .btn-soon svg { color: var(--text-2); }
+  .soon-note { margin: 14px auto 0; max-width: 460px; font-size: 14px; line-height: 1.55; color: var(--text-2); }
+  .cta [hidden] { display: none !important; }
 
   /* ───────── FOOTER ───────── */
   .site-footer { border-top: 1px solid rgb(255 255 255 / .08); padding: 28px 0 32px; font-size: 14px; line-height: 1.5; color: var(--text-3); }

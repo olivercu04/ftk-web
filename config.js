@@ -6,15 +6,15 @@ window.FTK_CONFIG = {
   // Tên ngắn: chữ trên thanh island, câu hỏi đáp và dòng bản quyền. Để trống: giữ chữ có sẵn.
   APP_SHORT: 'FTK',
   // Câu mô tả trang (thẻ meta description, hiện trên kết quả tìm kiếm). Để trống: giữ câu có sẵn.
-  TAGLINE: 'Dựng phòng nội thất 3D bằng kéo thả — cho người thiết kế và tư vấn nội thất.',
+  TAGLINE: 'Kéo đồ từ kho vào phòng 3D, thay mẫu tại chỗ, chọn vùng rồi bấm mẫu để đổi vật liệu. App Windows cho người thiết kế và tư vấn nội thất.',
 
-  // Link form đăng ký (bắt đầu bằng https://). Có: mọi nút "Đăng ký dùng thử" mở link ở tab mới. Để trống: nút cuộn tới mục Liên hệ.
+  // Link form đăng ký (bắt đầu bằng https://). Có: mọi nút "Đăng ký dùng thử" mở link ở tab mới. Để trống: nút cuộn tới mục Liên hệ. Cả 4 kênh liên hệ (form, email, Zalo, Facebook) trống: mục Liên hệ hiện nút "Sắp mở đăng ký"; có ít nhất 1 kênh: chỉ hiện ô của kênh có giá trị.
   SIGNUP_URL: '',
-  // Email liên hệ. Có: hiện ở mục Liên hệ dạng mailto. Để trống: hiện "Đang cập nhật".
+  // Email liên hệ. Có: hiện ở mục Liên hệ dạng mailto. Để trống: không hiện ô này.
   CONTACT_EMAIL: '',
-  // Link Zalo (https://). Có: hiện "Nhắn qua Zalo". Để trống: hiện "Đang cập nhật".
+  // Link Zalo (https://). Có: hiện "Nhắn qua Zalo". Để trống: không hiện ô này.
   ZALO_URL: '',
-  // Link trang Facebook (https://). Có: hiện "Trang Facebook". Để trống: hiện "Đang cập nhật".
+  // Link trang Facebook (https://). Có: hiện "Trang Facebook". Để trống: không hiện ô này.
   FACEBOOK_URL: '',
   // Mã video YouTube (chỉ phần mã, vd dQw4w9WgXcQ). Có: thêm ô "Video giới thiệu" ngay sau khối 3D. Để trống: không có ô video, không gửi request nào.
   YOUTUBE_ID: '',

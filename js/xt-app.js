@@ -16,7 +16,7 @@ const MOC = [
   { t: 0,    no: '',   name: 'Phòng trống',               sub: 'Chưa có món nào trong phòng' },
   { t: 0.8,  no: '01', name: 'Mở kho đồ',                 sub: 'Đồ nội thất, vật liệu và combo chung một cửa sổ' },
   { t: 2.0,  no: '02', name: 'Kéo đồ vào phòng',          sub: '' },
-  { t: 5.6,  no: '03', name: 'Chọn rồi chỉnh bằng gizmo', sub: 'Kéo trục đỏ, ghế bành nhích theo bước lưới' },
+  { t: 5.6,  no: '03', name: 'Chọn rồi chỉnh bằng gizmo', sub: 'Kéo trục đỏ của gizmo (tay cầm 3 trục), ghế bành nhích theo bước lưới' },
   { t: 7.2,  no: '04', name: 'Gom đồ thành nhóm',         sub: 'Bàn ăn và 4 ghế thành một nhóm' },
   { t: 8.6,  no: '05', name: 'Thay đồ tại chỗ',           sub: 'Ghế bành đổi mẫu, giữ vị trí và hướng xoay' },
   { t: 10.0, no: '06', name: 'Đổi vật liệu từng vùng',    sub: 'Vải bọc sofa: lanh xám → xanh rêu' },
@@ -814,7 +814,7 @@ export function start(stage, opt) {
     if (k !== lastMoc || sub !== lastSub || m.name !== ui.mocName.textContent) {
       ui.mocNo.textContent = m.no ? `${m.no} / 08` : (done ? '' : '00 / 08');
       ui.mocName.textContent = m.name;
-      ui.mocSub.textContent = sub;
+      ui.mocSub.textContent = sub ? `Mô phỏng · ${sub}` : '';
       ui.ticks.querySelectorAll('.xt-tick').forEach((e, i) => e.classList.toggle('is-on', i + 1 <= k));
       lastMoc = k; lastSub = sub;
     }

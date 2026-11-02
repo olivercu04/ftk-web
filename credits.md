@@ -2,7 +2,7 @@
 
 ## Ảnh giao diện
 
-Ảnh giao diện trong trang được chụp từ chính app.
+Ảnh giao diện app hiện đang ẩn (cờ `SHOW_ANH_APP` tắt trong `config.js`); sẽ hiện khi bật lại.
 
 ## Ảnh tạm
 
