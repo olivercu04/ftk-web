@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#04040A">
+<meta name="robots" content="noindex">
+<script>if (location.hash.length > 1) { document.documentElement.classList.add('nhay-tuc-thi'); addEventListener('load', function () { document.documentElement.classList.remove('nhay-tuc-thi'); }); }</script>
+<title data-cfg="APP_NAME" data-cfg-sau=" · Dựng phòng nội thất 3D bằng kéo thả">FTK — Furniture Tool Kit · Dựng phòng nội thất 3D bằng kéo thả</title>
+<meta name="description" data-cfg="TAGLINE" content="Kéo đồ từ kho vào phòng 3D, thay mẫu tại chỗ, chọn vùng rồi bấm mẫu để đổi vật liệu. App Windows cho người thiết kế và tư vấn nội thất.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="vi_VN">
+<meta property="og:url" content="https://olivercu04.github.io/ftk-web/">
+<meta property="og:title" data-cfg="APP_NAME" data-cfg-sau=" · Dựng phòng nội thất 3D bằng kéo thả" content="FTK — Furniture Tool Kit · Dựng phòng nội thất 3D bằng kéo thả">
+<meta property="og:description" content="Bày đồ, thay mẫu, đổi vật liệu ngay trong phòng 3D — dựng phương án nội thất cho khách xem.">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="style.css?v=1">
+<script type="importmap">{"imports":{"three":"./vendor/three/three.module.min.js","three/addons/":"./vendor/three/addons/"}}</script>
+<script src="config.js?v=1"></script>
+<script src="main.js?v=1"></script>
+</head>
+<body id="top">
+<div class="sky" aria-hidden="true"><div class="sky-neb"></div><canvas class="sky-far"></canvas><canvas class="sky-near"></canvas><div class="sky-grain"></div><div class="sky-vig"></div></div>
+<a class="skip" href="#noi-dung">Bỏ qua, tới nội dung</a>
+
+<!-- ═════════ DYNAMIC ISLAND (thay thanh đầu trang) ═════════ -->
+<header class="island-wrap">
+  <div class="island no-anim" data-mode="idle">
+    <div class="isl-in">
+      <div class="isl-bar">
+        <a class="isl-brand" href="#top" aria-label="FTK — lên đầu trang" data-cfg="APP_SHORT">FTK</a>
+        <div class="isl-live" data-kind="none" aria-hidden="true">
+          <span class="isl-ico">
+            <svg class="isl-ring" width="20" height="20" viewBox="0 0 20 20"><circle class="trk" cx="10" cy="10" r="7.6"/><circle class="val" cx="10" cy="10" r="7.6" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"/></svg>
+            <span class="isl-dot"></span>
+            <svg class="isl-ok" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.6 2.6L16 9.6"/></svg>
+          </span>
+          <span class="isl-no"></span><span class="isl-txt"></span><span class="isl-sub"></span>
+        </div>
+        <a class="btn btn-primary isl-cta" href="#lien-he" data-cfg-href="SIGNUP_URL">Đăng ký dùng thử</a>
+        <button class="isl-btn" type="button" aria-expanded="false" aria-controls="isl-menu" aria-label="Mở menu">
+          <svg class="i-menu" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 7.5h12M4 12.5h12"/></svg>
+          <svg class="i-x" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9"/></svg>
+        </button>
+      </div>
+      <div class="isl-panel" id="isl-menu" hidden>
+        <nav class="isl-nav" aria-label="Mục chính">
+          <ul>
+            <template data-an="anh-app"><li><a data-to="thao-tac">Thao tác</a></li></template>
+            <li><a href="#xem-thu">Xem thử 3D</a></li>
+            <li><a href="#tinh-nang">Tính năng</a></li>
+            <li><a href="#danh-cho-ai">Người dùng</a></li>
+            <li><a href="#cai-dat">Cài đặt</a></li>
+            <li><a href="#hoi-dap">Hỏi đáp</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <p id="isl-say" class="sr-only" role="status" aria-live="polite"></p>
+</header>
+
+<main id="noi-dung">
+
+<!-- ═════════ #hero ═════════ -->
+<section id="hero" class="hero" aria-labelledby="hero-title">
+  <div class="container">
+    <h1 id="hero-title" class="shine">Dựng phòng nội thất 3D bằng kéo thả</h1>
+    <p class="lead">Kéo đồ từ kho vào phòng, thay mẫu tại chỗ, chọn vùng rồi bấm mẫu để đổi vật liệu — dựng phương án cho khách xem ngay.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#lien-he" data-cfg-href="SIGNUP_URL">Đăng ký dùng thử</a>
+      <a class="btn btn-glass" href="#xem-thu" data-hero-2>Xoay thử phòng mẫu</a>
+    </div>
+    <p class="hero-note">App Windows<span aria-hidden="true">·</span>Bản cài khoảng 28 GB</p>
+
+    <!-- TẠM ẨN (cờ SHOW_ANH_APP): <template> không giải mã / tải ảnh bên trong. Cờ bật → script đưa lại vào DOM. -->
+    <template data-an="anh-app">
+    <figure class="hero-media" data-reveal style="--i:4">
+      <div class="frame">
+        <img data-media="ui-tong-quan" width="1400" height="996" alt="" fetchpriority="high">
+      </div>
+      <figcaption class="cap"></figcaption>
+    </figure>
+    </template>
+  </div>
+</section>
+
+<!-- ═════════ #thao-tac — TẠM ẨN (cờ SHOW_ANH_APP) ═════════
+     Cờ bật: script đưa khối vào lại chỗ này rồi mới khởi tạo phần kể chuyện theo cuộn.
+     Không JS / giảm chuyển động: danh sách tĩnh 8 bước, ảnh / ô chờ nằm trong từng bước. -->
+<template data-an="anh-app">
+<section id="thao-tac" class="section tt" aria-labelledby="tt-title">
+  <div class="container">
+    <div class="sec-head" data-reveal>
+      <p class="eyebrow">Xem thao tác</p>
+      <h2 id="tt-title" class="h2">Từ kho đồ tới bản lưu</h2>
+      <p class="sec-lead">Tám thao tác dựng một phương án, từ lúc mở kho tới khi lưu phòng.</p>
+    </div>
+  </div>
+  <div class="tt-wide">
+    <div class="tt-body">
+      <ol class="tt-steps">
+        <li class="tt-step" id="tt-1">
+          <div class="tt-text">
+            <p class="tt-no"><b>01</b> / 08</p>
+            <h3>Mở kho đồ</h3>
+            <p class="tt-desc">Bấm nút kho đồ trên thanh công cụ: đồ nội thất, vật liệu và combo nằm chung một cửa sổ, xếp theo thư mục, có ô tìm kiếm.</p>
+          </div>
+          <figure class="tt-media" data-step="1">
+            <img data-media="tt-01" width="945" height="532" loading="lazy" alt="">
+            <figcaption class="chip"></figcaption>
+          </figure>
+        </li>
+
+        <li class="tt-step" id="tt-2">
+          <div class="tt-text">
+            <p class="tt-no"><b>02</b> / 08</p>
+            <h3>Kéo đồ vào phòng</h3>
+            <p class="tt-desc">Kéo thẻ ra phòng 3D, bóng của món đồ bám theo sàn, tường hoặc trần dưới con trỏ. Thả tay là đồ nằm đúng chỗ, được chọn sẵn.</p>
+          </div>
+          <figure class="tt-media tt-wait" data-step="2" role="img" aria-label="Ô chờ video kéo đồ vào phòng, chưa có video">
+            <div class="tt-wait-in">
+              <span class="tt-wait-ico" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.6"/><path d="M13 13l8 4-3.4 1.2L16.4 21.6z"/><path d="M7 14v4h4" stroke-dasharray="2 2"/></svg></span>
+              <span class="wait-badge"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 8.6v6.8l5.6-3.4z" fill="currentColor"/></svg>Video sẽ cập nhật</span>
+            </div>
+          </figure>
+        </li>
+
+        <li class="tt-step" id="tt-3">
+          <div class="tt-text">
+            <p class="tt-no"><b>03</b> / 08</p>
+            <h3>Chọn rồi chỉnh bằng gizmo</h3>
+            <p class="tt-desc">Click hoặc quét khung để chọn, kéo gizmo 3 trục để di chuyển, xoay, co giãn theo bước lưới.</p>
+            <ul class="tt-keys">
+              <li><kbd>Ctrl</kbd><span class="plus">+</span><span class="act">click</span><span class="what">thêm / bớt món</span></li>
+              <li><kbd aria-label="Mũi tên trái">←</kbd><kbd aria-label="Mũi tên phải">→</kbd><span class="what">nhích một bước lưới</span></li>
+            </ul>
+          </div>
+          <figure class="tt-media" data-step="3">
+            <img data-media="tt-03" width="567" height="319" loading="lazy" alt="">
+            <figcaption class="chip"></figcaption>
+          </figure>
+        </li>
+
+        <li class="tt-step" id="tt-4">
+          <div class="tt-text">
+            <p class="tt-no"><b>04</b> / 08</p>
+            <h3>Gom đồ thành nhóm</h3>
+            <p class="tt-desc">Chọn nhiều món rồi gom thành nhóm để di chuyển cả cụm; vào trong nhóm khi cần sửa riêng từng món.</p>
+            <ul class="tt-keys">
+              <li><kbd>Ctrl</kbd><span class="plus">+</span><kbd>G</kbd><span class="what">gom nhóm</span></li>
+              <li><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>G</kbd><span class="what">bỏ một lớp nhóm</span></li>
+            </ul>
+          </div>
+          <figure class="tt-media tt-wait" data-step="4" role="img" aria-label="Ô chờ video gom nhóm, chưa có video">
+            <div class="tt-wait-in">
+              <span class="tt-wait-ico" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="2.5" y="2.5" width="19" height="19" rx="3" stroke-dasharray="2.4 2.4"/><rect x="6" y="6" width="5.5" height="5.5" rx="1.2"/><rect x="12.5" y="12.5" width="5.5" height="5.5" rx="1.2"/></svg></span>
+              <span class="wait-badge"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 8.6v6.8l5.6-3.4z" fill="currentColor"/></svg>Video sẽ cập nhật</span>
+            </div>
+          </figure>
+        </li>
+
+        <li class="tt-step" id="tt-5">
+          <div class="tt-text">
+            <p class="tt-no"><b>05</b> / 08</p>
+            <h3>Thay đồ tại chỗ</h3>
+            <p class="tt-desc">Chuột phải lên món đồ để thay: kho mở đúng thư mục của món, bạn chọn mẫu khác. Món mới giữ vị trí, hướng xoay và nhóm của món cũ.</p>
+          </div>
+          <figure class="tt-media tt-wait" data-step="5" role="img" aria-label="Ô chờ video thay đồ, chưa có video">
+            <div class="tt-wait-in">
+              <span class="tt-wait-ico" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13M14 4.5 17.5 8 14 11.5M20 16H7M10 12.5 6.5 16l3.5 3.5"/></svg></span>
+              <span class="wait-badge"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 8.6v6.8l5.6-3.4z" fill="currentColor"/></svg>Video sẽ cập nhật</span>
+            </div>
+          </figure>
+        </li>
+
+        <li class="tt-step" id="tt-6">
+          <div class="tt-text">
+            <p class="tt-no"><b>06</b> / 08</p>
+            <h3>Đổi vật liệu từng vùng</h3>
+            <p class="tt-desc">Chọn một vùng của món đồ (mặt bàn, chân bàn…), bấm nút áp ở góc thẻ vật liệu, hoặc kéo thẻ thả thẳng lên đồ.</p>
+          </div>
+          <figure class="tt-media" data-step="6">
+            <img data-media="tt-02" width="1280" height="720" loading="lazy" alt="">
+            <figcaption class="chip"></figcaption>
+          </figure>
+        </li>
+
+        <li class="tt-step" id="tt-7">
+          <div class="tt-text">
+            <p class="tt-no"><b>07</b> / 08</p>
+            <h3>Lưu cả bộ thành combo</h3>
+            <p class="tt-desc">Chọn từ 2 món trở lên, lưu thành combo từ menu chuột phải; cả bộ vào tab combo của kho, kèm ảnh bìa tự chụp. Lần sau kéo cả bộ vào phòng, đúng đội hình và vật liệu.</p>
+          </div>
+          <figure class="tt-media tt-wait" data-step="7" role="img" aria-label="Ô chờ video combo, chưa có video">
+            <div class="tt-wait-in">
+              <span class="tt-wait-ico" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3.5 21 8l-9 4.5L3 8z"/><path d="M3 12l9 4.5 9-4.5M3 16l9 4.5 9-4.5"/></svg></span>
+              <span class="wait-badge"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 8.6v6.8l5.6-3.4z" fill="currentColor"/></svg>Video sẽ cập nhật</span>
+            </div>
+          </figure>
+        </li>
+
+        <li class="tt-step" id="tt-8">
+          <div class="tt-text">
+            <p class="tt-no"><b>08</b> / 08</p>
+            <h3>Lưu phòng, hoàn tác dễ</h3>
+            <p class="tt-desc">Mở bảng lưu, đặt tên rồi lưu phòng để mở lại khi cần. Làm sai thì hoàn tác từng bước.</p>
+            <ul class="tt-keys">
+              <li><kbd>M</kbd><span class="what">mở bảng lưu</span></li>
+              <li><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Z</kbd><span class="what">hoàn tác</span></li>
+            </ul>
+          </div>
+          <figure class="tt-media tt-wait" data-step="8" role="img" aria-label="Ô chờ video lưu phòng và hoàn tác, chưa có video">
+            <div class="tt-wait-in">
+              <span class="tt-wait-ico" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 5 4.5 9l4 4"/><path d="M4.5 9H14a5.5 5.5 0 0 1 0 11h-4"/></svg></span>
+              <span class="wait-badge"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 8.6v6.8l5.6-3.4z" fill="currentColor"/></svg>Video sẽ cập nhật</span>
+            </div>
+          </figure>
+        </li>
+      </ol>
+    </div>
+  </div>
+</section>
+</template>
+
+<!-- ═════════ #xem-thu — Phòng 3D xem thử ═════════
+     Cảnh dựng bằng code (three.js 0.160.1 nằm ở vendor/three/, chỉ nạp khi khối sắp vào màn hình).
+     Không JS → ảnh chụp sẵn trong <noscript>. Không WebGL → script lấy đúng ảnh đó + câu giải thích. -->
+<section id="xem-thu" class="section xt" aria-labelledby="xt-title-h">
+  <div class="container">
+    <div class="sec-head xt-head" data-reveal>
+      <div>
+        <p class="eyebrow">Xem thử 3D</p>
+        <h2 id="xt-title-h" class="h2">Xoay thử một phòng mẫu</h2>
+      </div>
+      <p class="sec-lead">Kéo để xoay phòng, bấm vào từng món để xem và đổi vật liệu, hoặc bấm Dựng phòng để xem các thao tác nối nhau từ phòng trống tới lúc lưu.</p>
+    </div>
+  </div>
+  <div class="xt-wrap">
+    <div class="xt-stage" data-time="dem">
+      <p class="xt-load" aria-hidden="true">Đang dựng phòng 3D…</p>
+      <noscript><div class="xt-fallback"><img src="media/xt-fallback.webp" width="1280" height="641" alt="Phòng mẫu dựng bằng code, chế độ đêm, lơ lửng giữa nền trời sao, nhìn từ trên chéo xuống: sàn gỗ, hai bức tường có cửa sổ, sofa, ghế bành, bàn trà tròn trên thảm, kệ sách, đèn cây, chậu cây, tranh treo tường và bàn ăn 4 ghế." loading="lazy"><p class="xt-fb-note">Bật JavaScript để xoay phòng 3D. Mô phỏng trên web — dựng bằng code để minh hoạ, không phải giao diện app.</p></div></noscript>
+      <div class="xt-ui">
+        <button class="xt-touch" type="button" aria-label="Chạm để xoay phòng"><span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V10"/><path d="M12 10V8.5a1.5 1.5 0 0 1 3 0V11"/><path d="M15 10.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-.6a6 6 0 0 1-4.6-2.2L4.2 15.6a1.5 1.5 0 0 1 2.2-2L9 15.5"/></svg>Chạm để xoay phòng</span></button>
+
+        <div class="xt-panel lg xt-info">
+          <p class="xt-over">Phòng mẫu</p>
+          <p class="xt-title">Phòng khách + bàn ăn</p>
+          <p class="xt-meta">11 mẫu đồ (14 món) · 7,2 × 5,6 m · 2 nhóm</p>
+          <p class="xt-sim"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".9" fill="currentColor" stroke="none"/></svg><span>Mô phỏng trên web — dựng bằng code để minh hoạ, không phải giao diện app</span></p>
+          <button class="xt-all" type="button">Xem từng món <span aria-hidden="true">→</span></button>
+        </div>
+
+        <div class="xt-panel lg xt-ctrl">
+          <div class="xt-seg" role="group" aria-label="Ánh sáng">
+            <button type="button" data-time-set="ngay" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg>Ngày</button>
+            <button type="button" data-time-set="dem" aria-pressed="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>Đêm</button>
+          </div>
+          <div class="xt-seg" role="group" aria-label="Góc nhìn có sẵn">
+            <button type="button" data-view="toan" aria-pressed="true">Toàn cảnh</button>
+            <button type="button" data-view="sofa" aria-pressed="false">Góc sofa</button>
+            <button type="button" data-view="an" aria-pressed="false">Bàn ăn</button>
+            <button type="button" data-view="tren" aria-pressed="false">Từ trên xuống</button>
+          </div>
+        </div>
+
+        <p class="xt-hint xt-solid"></p>
+        <div class="xt-kho xt-solid" aria-hidden="true"><span class="k-ttl">Kho đồ</span><span data-k="do">Đồ nội thất</span><span data-k="vl">Vật liệu</span><span data-k="cb">Combo</span><span class="xt-kho-item"></span></div>
+        <p class="xt-glabel" aria-hidden="true"></p>
+        <p class="xt-tip xt-solid" aria-hidden="true"></p>
+        <button class="xt-done xt-solid" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>Xong, cuộn trang</button>
+
+        <aside class="xt-panel lg xt-card" aria-label="Thông tin món đồ đang chọn" aria-hidden="true">
+          <div class="xt-card-head">
+            <p class="xt-over">Món đồ · <span data-x="idx">01</span> / <span data-x="cnt">11</span></p>
+            <button class="xt-x" type="button" aria-label="Đóng thẻ"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+          </div>
+          <h3 data-x="name">Sofa 3 chỗ</h3>
+          <dl class="xt-props">
+            <div><dt>Loại đồ</dt><dd data-x="loai">Sofa</dd></div>
+            <div><dt>Bám mặt</dt><dd data-x="bam">Sàn</dd></div>
+            <div class="wide"><dt>Vật liệu · vùng <span data-x="vung">vải bọc</span></dt><dd data-x="vl">Vải xanh rêu</dd></div>
+            <div class="wide"><dt>Nhóm / combo</dt><dd data-x="nhom">Nhóm Góc sofa</dd></div>
+          </dl>
+          <p class="xt-chips-lbl">Đổi vật liệu</p>
+          <div class="xt-chips" role="group" aria-label="Đổi vật liệu"></div>
+          <div class="xt-nav">
+            <button type="button" data-x="prev"><span aria-hidden="true">←</span> Món trước</button>
+            <button type="button" data-x="next">Món sau <span aria-hidden="true">→</span></button>
+          </div>
+          <p class="xt-fine">Tên đồ, vật liệu, nhóm là dữ liệu mô phỏng cho phòng mẫu này.</p>
+        </aside>
+
+        <div class="xt-panel lg xt-tl">
+          <button class="xt-play" type="button" data-state="play" aria-label="Phát: dựng phòng từ phòng trống">
+            <svg class="i-play" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg>
+            <svg class="i-pause" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 5.5h3v13h-3zM13.5 5.5h3v13h-3z" fill="currentColor"/></svg>
+            <svg class="i-replay" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M4.5 4.5v4h4"/></svg>
+            <span class="xt-play-txt">Dựng phòng</span>
+          </button>
+          <div class="xt-tl-main">
+            <div class="xt-tl-top"><p class="xt-moc"><b></b><span>Phòng mẫu đã dựng xong</span></p><p class="xt-time">00:14 / 00:14</p></div>
+            <p class="xt-moc-sub">Mô phỏng · Xem lại từ phòng trống, qua 8 thao tác</p>
+            <div class="xt-range"><input type="range" min="0" max="1420" step="1" value="1420" aria-label="Thanh thời gian dựng phòng"><div class="xt-ticks" aria-hidden="true"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ #tinh-nang ═════════ -->
+<section id="tinh-nang" class="section" aria-labelledby="tn-title">
+  <div class="container">
+    <div class="sec-head" data-reveal>
+      <p class="eyebrow">Tính năng</p>
+      <h2 id="tn-title" class="h2">Những chi tiết giúp làm nhanh hơn</h2>
+    </div>
+
+    <ul class="details lg" data-reveal>
+      <li class="detail">
+        <span class="ico" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-7.5-10.1A4.2 4.2 0 0 1 12 7.6a4.2 4.2 0 0 1 7.5 2.3C19.5 15.4 12 20 12 20z"/></svg></span>
+        <div><h3>Kho nhớ chỗ bạn xem</h3><p>Thả tim đồ hay dùng, xem lại đồ vừa dùng; mỗi tab nhớ chỗ bạn đang xem.</p></div>
+      </li>
+      <li class="detail">
+        <span class="ico" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 3v18M4.5 6 2.8 7.7M4.5 10.5 2.8 12.2M4.5 15 2.8 16.7"/><rect x="8.5" y="7" width="11" height="9" rx="1.4"/></svg></span>
+        <div><h3>Lên tường là đứng thẳng</h3><p>Kéo đồ lên tường, món đồ tự xoay đứng thẳng theo mặt tường.</p></div>
+      </li>
+      <li class="detail">
+        <span class="ico" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="8.5" y="8.5" width="11" height="11" rx="2"/><path d="M15.5 8.5V6A1.5 1.5 0 0 0 14 4.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5"/></svg></span>
+        <div><h3>Dán đúng chỗ con trỏ</h3><p>Sao chép rồi dán tại chỗ con trỏ, hoặc nhân bản ngay bên cạnh món đang chọn.</p></div>
+      </li>
+      <li class="detail">
+        <span class="ico" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="5.8" cy="12" r="3.2"/><circle cx="12" cy="12" r="3.2"/><circle cx="18.2" cy="12" r="3.2"/></svg></span>
+        <div><h3>Áp cho cả loạt</h3><p>Chọn nhiều món cùng mẫu thì áp vật liệu một lần; muốn quay lại thì đặt về vật liệu gốc.</p></div>
+      </li>
+      <li class="detail">
+        <span class="ico" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13M14 4.5 17.5 8 14 11.5M20 16H7M10 12.5 6.5 16l3.5 3.5"/></svg></span>
+        <div><h3>Thay cả bộ combo</h3><p>Combo đã đặt trong phòng có thể thay cả bộ bằng combo khác, ngay tại chỗ.</p></div>
+      </li>
+      <li class="detail">
+        <span class="ico" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="14" rx="2"/><path d="m3.5 16 5-4.5 4 3.5 2.5-2 5 4"/><circle cx="15.5" cy="9.5" r="1.4"/></svg></span>
+        <div><h3>Bản lưu có ảnh xem trước</h3><p>Mỗi bản lưu có ảnh xem trước và giờ lưu; mở lại, đồ về đúng vị trí và vật liệu.</p></div>
+      </li>
+    </ul>
+    <!-- Phím tắt -->
+    <div class="keys lg" data-reveal>
+      <div class="keys-title">
+        <h3>Phím tắt</h3>
+        <p>Thao tác nhanh bằng bàn phím và chuột.</p>
+      </div>
+      <div class="kgroup">
+        <h4>Sửa</h4>
+        <dl>
+          <div class="krow"><dt><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Z</kbd></dt><dd>Hoàn tác</dd></div>
+          <div class="krow"><dt><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Z</kbd></dt><dd>Làm lại</dd></div>
+          <div class="krow"><dt><kbd>Ctrl</kbd><span class="plus">+</span><kbd>C</kbd></dt><dd>Sao chép</dd></div>
+          <div class="krow"><dt><kbd>Ctrl</kbd><span class="plus">+</span><kbd>V</kbd></dt><dd>Dán tại chỗ con trỏ</dd></div>
+          <div class="krow"><dt><kbd>Ctrl</kbd><span class="plus">+</span><kbd>D</kbd></dt><dd>Nhân bản ngay bên cạnh</dd></div>
+          <div class="krow"><dt><kbd>Delete</kbd></dt><dd>Xoá</dd></div>
+        </dl>
+      </div>
+      <div class="kgroup">
+        <h4>Sắp xếp</h4>
+        <dl>
+          <div class="krow"><dt><kbd>Ctrl</kbd><span class="plus">+</span><kbd>G</kbd></dt><dd>Gom nhóm</dd></div>
+          <div class="krow"><dt><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>G</kbd></dt><dd>Bỏ một lớp nhóm</dd></div>
+          <div class="krow"><dt><kbd>Ctrl</kbd><span class="plus">+</span><span class="act">click</span></dt><dd>Thêm / bớt món đang chọn</dd></div>
+          <div class="krow"><dt><kbd aria-label="Mũi tên trái">←</kbd><kbd aria-label="Mũi tên lên">↑</kbd><kbd aria-label="Mũi tên phải">→</kbd><kbd aria-label="Mũi tên xuống">↓</kbd></dt><dd>Nhích một bước lưới<small>giữ phím để nhích liên tục</small></dd></div>
+          <div class="krow"><dt><span class="act">Bấm nhanh chuột phải</span></dt><dd>Mở menu thao tác</dd></div>
+        </dl>
+      </div>
+      <div class="kgroup">
+        <h4>Camera &amp; lưu</h4>
+        <dl>
+          <div class="krow"><dt><span class="act">Giữ chuột phải + rê</span></dt><dd>Xoay camera</dd></div>
+          <div class="krow"><dt><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><span class="sep">·</span><kbd>Q</kbd><kbd>E</kbd></dt><dd>Di chuyển camera<small>khi giữ chuột phải</small></dd></div>
+          <div class="krow"><dt><kbd>M</kbd></dt><dd>Mở bảng lưu / mở phòng</dd></div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ #danh-cho-ai (nhãn: Người dùng) ═════════ -->
+<section id="danh-cho-ai" class="band" aria-labelledby="nd-title">
+  <div class="container band-grid">
+    <div>
+      <div data-reveal>
+        <p class="eyebrow">Người dùng</p>
+        <h2 id="nd-title" class="h2">Cho người thiết kế và tư vấn nội thất</h2>
+        <p class="sec-lead">Dựng nhanh phương án trong phòng 3D để khách xem, góp ý và chọn ngay tại buổi gặp.</p>
+      </div>
+      <ul class="benefits">
+        <li class="benefit" data-reveal style="--i:0">
+          <span class="n" aria-hidden="true">01</span>
+          <div><h3>Đổi phương án trước mặt khách</h3><p>Thay mẫu đồ, đổi vật liệu tại chỗ; khách thấy khác biệt ngay trên màn hình.</p></div>
+        </li>
+        <li class="benefit" data-reveal style="--i:1">
+          <span class="n" aria-hidden="true">02</span>
+          <div><h3>Dùng lại bộ đồ đã phối</h3><p>Lưu bàn ghế, kệ tủ đã ưng thành combo, lần sau kéo cả bộ vào phòng mới.</p></div>
+        </li>
+        <li class="benefit" data-reveal style="--i:2">
+          <span class="n" aria-hidden="true">03</span>
+          <div><h3>Thử thoải mái, quay lại dễ</h3><p>Hoàn tác từng bước; mỗi phương án lưu thành một bản riêng để mở lại khi cần.</p></div>
+        </li>
+      </ul>
+    </div>
+    <figure class="photo" data-reveal style="--i:1">
+      <img data-media="nguoi-dung" width="1200" height="900" loading="lazy" alt="">
+      <figcaption class="chip"></figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ═════════ #ai-sap-co (ẩn; hiện khi SHOW_AI_TEASER bật) ═════════ -->
+<section id="ai-sap-co" class="section" aria-labelledby="ai-title" hidden>
+  <div class="container">
+    <div class="soon lg" data-reveal>
+      <p class="eyebrow">Sắp có</p>
+      <h2 id="ai-title" class="h2">AI bày đồ — sắp có</h2>
+      <p class="sec-lead">Chúng tôi đang thử nghiệm để AI hỗ trợ bày đồ vào phòng. Tính năng này chưa có trong bản hiện tại.</p>
+      <p class="wait-badge"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg>Đang thử nghiệm</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ #cai-dat ═════════ -->
+<section id="cai-dat" class="section" aria-labelledby="cd-title">
+  <div class="container">
+    <div class="install lg" data-reveal>
+      <div>
+        <p class="eyebrow">Cài đặt</p>
+        <h2 id="cd-title" class="h2">Thông số cài đặt</h2>
+        <p class="install-sub">Cấu hình đề xuất sẽ cập nhật tại đây.</p>
+      </div>
+      <dl class="specs">
+        <div class="spec"><dt>Hệ điều hành</dt><dd>Windows</dd></div>
+        <div class="spec"><dt>Dung lượng bản cài</dt><dd>Khoảng 28 GB</dd></div>
+        <div class="spec"><dt>Cấu hình máy</dt><dd class="pending">Đang cập nhật</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ #hoi-dap ═════════ -->
+<section id="hoi-dap" class="section" aria-labelledby="hd-title">
+  <div class="narrow">
+    <div class="sec-head" data-reveal>
+      <p class="eyebrow">Hỏi đáp</p>
+      <h2 id="hd-title" class="h2">Câu hỏi thường gặp</h2>
+    </div>
+    <div class="faq lg" data-reveal>
+      <details open>
+        <summary><span class="q"><span data-cfg="APP_SHORT">FTK</span> chạy trên máy nào?</span><span class="pm" aria-hidden="true"></span></summary>
+        <p class="ans">Máy tính Windows. Bản cài khoảng 28 GB; cấu hình đề xuất đang cập nhật.</p>
+      </details>
+      <details>
+        <summary><span class="q">Có bản cho Mac không?</span><span class="pm" aria-hidden="true"></span></summary>
+        <p class="ans">Hiện chỉ có bản Windows.</p>
+      </details>
+      <details>
+        <summary><span class="q">Giá bao nhiêu?</span><span class="pm" aria-hidden="true"></span></summary>
+        <p class="ans">Giá chưa công bố. Thông tin giá sẽ có khi mở đăng ký dùng thử.</p>
+      </details>
+      <details>
+        <summary><span class="q">Kho có sẵn bao nhiêu đồ và vật liệu?</span><span class="pm" aria-hidden="true"></span></summary>
+        <p class="ans">Kho có sẵn đồ nội thất và vật liệu, chia theo thư mục. Chúng tôi chưa công bố con số; bạn xem trực tiếp khi dùng thử. Bộ đồ bạn tự phối có thể lưu thành combo để dùng lại.</p>
+      </details>
+      <details>
+        <summary><span class="q">Có phải dựng mô hình 3D không?</span><span class="pm" aria-hidden="true"></span></summary>
+        <p class="ans">Không. Bạn chọn đồ có sẵn trong kho, kéo vào phòng rồi sắp xếp, thay mẫu, đổi vật liệu.</p>
+      </details>
+      <details>
+        <summary><span class="q">Có lưu phòng để mở lại không?</span><span class="pm" aria-hidden="true"></span></summary>
+        <p class="ans">Có. Bấm M để mở bảng lưu, đặt tên rồi lưu; mỗi bản lưu có ảnh xem trước và giờ lưu. Mở lại, đồ về đúng vị trí và vật liệu.</p>
+      </details>
+      <details>
+        <summary><span class="q">Làm sai có hoàn tác được không?</span><span class="pm" aria-hidden="true"></span></summary>
+        <p class="ans">Được. Ctrl+Z hoàn tác, Ctrl+Shift+Z làm lại, giữ 50 bước gần nhất. Mở một bản lưu thì lịch sử bắt đầu lại. Riêng xoá combo khỏi kho không hoàn tác được — app hỏi lại trước khi xoá.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ #lien-he ═════════ -->
+<section id="lien-he" class="cta" aria-labelledby="lh-title">
+  <div class="container">
+    <div class="cta-card lg" data-reveal>
+      <div class="cta-ico"><img src="media/icon.webp" width="200" height="210" alt="" loading="lazy"></div>
+      <p class="eyebrow">Liên hệ</p>
+      <h2 id="lh-title" class="h2 shine">Đăng ký dùng thử</h2>
+      <p class="sub">Kênh liên hệ đang cập nhật.</p>
+      <ul class="lh-list" hidden>
+        <li class="lh-item" data-ch="SIGNUP_URL" hidden><span class="lh-lbl">Form đăng ký</span><span class="lh-val"></span></li>
+        <li class="lh-item" data-ch="CONTACT_EMAIL" hidden><span class="lh-lbl">Email</span><span class="lh-val"></span></li>
+        <li class="lh-item" data-ch="ZALO_URL" hidden><span class="lh-lbl">Zalo</span><span class="lh-val"></span></li>
+        <li class="lh-item" data-ch="FACEBOOK_URL" hidden><span class="lh-lbl">Facebook</span><span class="lh-val"></span></li>
+      </ul>
+      <div class="cta-actions">
+        <button class="btn btn-soon" type="button" disabled aria-describedby="soon-note">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg>
+          Sắp mở đăng ký
+        </button>
+      </div>
+      <p id="soon-note" class="soon-note">Chưa nhận đăng ký lúc này. Nút sẽ mở khi có form đăng ký.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ═════════ FOOTER ═════════ -->
+<footer class="site-footer">
+  <div class="container foot">
+    <div class="foot-left"><span class="brand" data-cfg="APP_NAME">FTK — Furniture Tool Kit</span><span>© 2026</span></div>
+    <details class="credits">
+      <summary>Ảnh minh hoạ: xem credits</summary>
+      <p>Ảnh ở mục Người dùng lấy từ Pexels (mã 6758771), dùng theo Pexels License.<template data-an="anh-app"> Các ảnh giao diện còn lại chụp từ app.</template></p>
+    </details>
+    <a href="#top">Lên đầu trang ↑</a>
+  </div>
+</footer>
+</body>
+</html>
