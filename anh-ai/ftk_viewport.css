@@ -136,7 +136,7 @@
 .ftkv-chip b { color: var(--v-text); font-weight: 600; margin-right: 4px; }
 .ftkv-chip:hover { background: rgb(255 255 255 / .09); }
 .ftkv-chip[aria-current="true"] { border-color: var(--v-accent); background: rgb(163 150 255 / .12); color: var(--v-text); }
-.ftkv-chip.ngoai { opacity: .5; }          /* bản không nằm trên đường từ v0 tới bản đang xem */
+.ftkv-chip.ngoai { opacity: .62; }         /* bản không nằm trên đường từ v0 tới bản đang xem (.5 → chữ 4,46 < 4,5) */
 .ftkv-nhom { display: flex; gap: 6px; flex: none; }
 
 /* ── Ô chat ── */

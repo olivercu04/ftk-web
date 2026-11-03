@@ -474,7 +474,6 @@
   #anh-ai .anh-ai-cho { margin: 0; padding: 24px; color: var(--text-3); }
   #anh-ai .anh-ai-ghi { margin: 14px 0 0; color: var(--text-3); font-size: 13.5px; }
   #anh-ai .ftkv-bao { top: auto; bottom: 14px; }          /* thanh menu nổi ở trên → thông báo xuống đáy */
-  #anh-ai .ftkv-chip.ngoai { opacity: .62; }              /* bản ngoài nhánh đang xem: mờ .5 thì chữ chỉ đạt 4,46 < 4,5 */
   /* điện thoại: cao theo nội dung — thành phần đẩy ô chat xuống đáy khung, khung cao cố định sẽ để lại khoảng trống lớn */
   @media (max-width: 640px) { #anh-ai .anh-ai-vp { height: auto; min-height: 0; } }
 

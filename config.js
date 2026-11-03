@@ -24,7 +24,7 @@ window.FTK_CONFIG = {
   // true: hiện ảnh giao diện app ở đầu trang, khối "Xem thao tác" và mục menu "Thao tác". false: ẩn, ảnh không được tải. Bật khi có clip quay thật.
   SHOW_ANH_APP: false,
   // Số phiên bản trang. Khi đổi, đổi cả ?v= trong index.html (style.css, config.js, main.js); mã 3D tự lấy số này.
-  PAGE_VERSION: '2',
+  PAGE_VERSION: '3',
 
   // Ảnh nội dung. Trong index.html ảnh là <img data-media="khoá">; main.js điền src, alt, chú thích từ đây.
   // nguon: 'that' = ảnh chụp từ app · 'tam' = ảnh tạm (chú thích "Ảnh minh hoạ", ghi nguồn ở credits.md).
