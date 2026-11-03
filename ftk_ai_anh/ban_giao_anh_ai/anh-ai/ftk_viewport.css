@@ -1,0 +1,200 @@
+/* FTK — viewport ảnh AI. Dùng lại token của trang giới thiệu (demo-v5): nếu trang chủ đã khai biến thì ăn theo,
+   không thì lấy giá trị mặc định dưới đây. Mọi lớp đều có tiền tố .ftkv để nhúng được vào trang khác (B5). */
+.ftkv {
+  --v-bg: var(--bg, #04040A);
+  --v-text: var(--text, #F4F4FA);
+  --v-text-2: var(--text-2, #C3C3CF);
+  --v-text-3: var(--text-3, #A6A6B5);
+  --v-accent: var(--accent, #A396FF);
+  --v-accent-txt: var(--accent-txt, #BDB3FF);
+  --v-fill-a: var(--fill-a, #6B57F5);
+  --v-fill-b: var(--fill-b, #5643DB);
+  --v-glass: var(--lg-tint-3d, rgb(10 10 22 / .82));
+  --v-edge: var(--lg-edge, rgb(255 255 255 / .14));
+  --v-shadow: var(--lg-shadow, 0 32px 80px -32px rgb(0 0 0 / .9), 0 10px 28px -14px rgb(0 0 0 / .7));
+  --v-ease: var(--ease, cubic-bezier(.2, .7, .2, 1));
+  --v-r: 18px;
+  --v-font: var(--f-body, 'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', sans-serif);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+  min-width: 0;                                /* nằm trong flex của trang chủ: không để dải phiên bản đẩy tràn ngang */
+  color: var(--v-text);
+  font: 400 15px/1.55 var(--v-font);
+  -webkit-font-smoothing: antialiased;
+}
+.ftkv *, .ftkv *::before, .ftkv *::after { box-sizing: border-box; }
+.ftkv button { font: inherit; color: inherit; }
+
+/* ── Sân khấu: ảnh + lớp phủ, ĐÚNG tỉ lệ ảnh (--ftkv-tl do JS đặt từ id_map), vừa khung ── */
+.ftkv-khung { position: relative; flex: 1 1 auto; min-height: 200px; display: grid; place-items: center; container-type: size; }
+.ftkv-san {
+  position: relative;
+  aspect-ratio: 3 / 2;                         /* JS ghi đè bằng W / H thật */
+  width: min(100cqw, calc(100cqh * var(--ftkv-tl, 1.5)));   /* lớn nhất vừa khung, giữ tỉ lệ */
+  border-radius: var(--v-r);
+  overflow: hidden;
+  background: #0d0d16;
+  box-shadow: var(--v-shadow);
+  touch-action: manipulation;
+  outline: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.ftkv-san:focus-visible { box-shadow: 0 0 0 2px var(--v-accent), var(--v-shadow); }
+.ftkv-anh {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: fill; pointer-events: none;      /* khung đã đúng tỉ lệ → không cắt ảnh, toạ độ bấm = pixel ảnh */
+  transition: opacity .38s var(--v-ease);
+}
+.ftkv-anh.an { opacity: 0; }
+/* thứ tự lớp: ảnh (0 / 1 khi chuyển mờ) < lớp phủ viền (2) < nhãn (3) < thẻ (4) < thông báo (6) */
+.ftkv-phu { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
+.ftkv-san.tro { cursor: pointer; }
+.ftkv-dang-tai {
+  position: absolute; inset: 0; display: grid; place-items: center; z-index: 2;
+  color: var(--v-text-3); font-size: 14px; letter-spacing: .02em;
+  background: radial-gradient(60% 60% at 50% 50%, rgb(255 255 255 / .04), transparent);
+  transition: opacity .3s var(--v-ease);
+}
+.ftkv-dang-tai.an { opacity: 0; pointer-events: none; }
+
+/* nhãn nổi theo con trỏ */
+.ftkv-nhan {
+  position: absolute; left: 0; top: 0; z-index: 3;
+  padding: 5px 11px; border-radius: 999px;
+  background: var(--v-glass); border: 1px solid var(--v-edge);
+  -webkit-backdrop-filter: blur(14px) saturate(160%); backdrop-filter: blur(14px) saturate(160%);
+  font-size: 13px; font-weight: 500; white-space: nowrap;
+  pointer-events: none; opacity: 0; transform: translate(-50%, -140%) scale(.96);
+  transition: opacity .14s var(--v-ease), transform .14s var(--v-ease);
+}
+.ftkv-nhan.hien { opacity: 1; transform: translate(-50%, -140%) scale(1); }
+.ftkv-nhan.duoi { transform: translate(-50%, 60%) scale(.96); }        /* sát mép trên: lật xuống dưới con trỏ */
+.ftkv-nhan.duoi.hien { transform: translate(-50%, 60%) scale(1); }
+/* khung ảnh thấp (điện thoại nằm ngang, cửa sổ lùn): thẻ món che hết ảnh → ẩn, tên món đã có ở chip ô chat */
+@container (max-height: 300px) { .ftkv-the { display: none; } }
+
+/* ── Thẻ món đang chọn ── */
+.ftkv-the {
+  position: absolute; top: 14px; right: 14px; z-index: 4;
+  width: min(300px, calc(100% - 28px));
+  padding: 16px 16px 14px;
+  border-radius: 16px;
+  background: var(--v-glass); border: 1px solid var(--v-edge);
+  -webkit-backdrop-filter: blur(20px) saturate(160%); backdrop-filter: blur(20px) saturate(160%);
+  box-shadow: var(--v-shadow);
+  opacity: 0; transform: translateY(-6px); pointer-events: none;
+  transition: opacity .2s var(--v-ease), transform .2s var(--v-ease);
+}
+.ftkv-the.hien { opacity: 1; transform: none; pointer-events: auto; }
+.ftkv-the-dau { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.ftkv-the-tren { margin: 0; color: var(--v-accent-txt); font-size: 12px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; }
+.ftkv-the h3 { margin: 4px 0 10px; font-size: 18px; font-weight: 600; line-height: 1.3; }
+.ftkv-the dl { margin: 0 0 12px; display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 13px; }
+.ftkv-the dt { color: var(--v-text-3); }
+.ftkv-the dd { margin: 0; color: var(--v-text-2); overflow-wrap: anywhere; }
+.ftkv-the-dong { display: flex; gap: 8px; }
+.ftkv-x {
+  width: 28px; height: 28px; display: grid; place-items: center; flex: none;
+  border-radius: 999px; border: 1px solid var(--v-edge); background: rgb(255 255 255 / .04); cursor: pointer;
+}
+.ftkv-x:hover { background: rgb(255 255 255 / .1); }
+
+/* ── Nút chung ── */
+.ftkv-nut {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  height: 34px; padding: 0 14px; border-radius: 999px;
+  border: 1px solid var(--v-edge); background: rgb(255 255 255 / .05);
+  font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap;
+  transition: background .15s var(--v-ease), opacity .15s var(--v-ease), transform .1s var(--v-ease);
+}
+.ftkv-nut:hover:not(:disabled) { background: rgb(255 255 255 / .11); }
+.ftkv-nut:active:not(:disabled) { transform: scale(.97); }
+.ftkv-nut:disabled { opacity: .38; cursor: default; }
+.ftkv-nut.chinh { border-color: transparent; background: linear-gradient(180deg, var(--v-fill-a), var(--v-fill-b)); color: #fff; }
+.ftkv-nut.chinh:hover:not(:disabled) { filter: brightness(1.08); background: linear-gradient(180deg, var(--v-fill-a), var(--v-fill-b)); }
+.ftkv-nut.rong { flex: 1; }
+
+/* ── Thanh dưới: phiên bản + hoàn tác ── */
+.ftkv-thanh { display: flex; align-items: center; gap: 10px; min-height: 0; }
+.ftkv-ban {
+  display: flex; gap: 8px; flex: 1; min-width: 0; overflow-x: auto; padding: 2px 2px 4px;
+  scrollbar-width: thin; scrollbar-color: rgb(255 255 255 / .2) transparent;
+}
+.ftkv-chip {
+  flex: none; display: flex; align-items: center; gap: 8px;
+  height: 44px; padding: 3px 12px 3px 3px; border-radius: 12px;
+  border: 1px solid var(--v-edge); background: rgb(255 255 255 / .04);
+  font-size: 12.5px; color: var(--v-text-2); cursor: pointer;
+  transition: border-color .15s var(--v-ease), background .15s var(--v-ease);
+}
+.ftkv-chip img { width: 54px; height: 36px; object-fit: cover; border-radius: 9px; }
+.ftkv-chip b { color: var(--v-text); font-weight: 600; margin-right: 4px; }
+.ftkv-chip:hover { background: rgb(255 255 255 / .09); }
+.ftkv-chip[aria-current="true"] { border-color: var(--v-accent); background: rgb(163 150 255 / .12); color: var(--v-text); }
+.ftkv-chip.ngoai { opacity: .5; }          /* bản không nằm trên đường từ v0 tới bản đang xem */
+.ftkv-nhom { display: flex; gap: 6px; flex: none; }
+
+/* ── Ô chat ── */
+.ftkv-chat {
+  display: flex; gap: 8px; align-items: center;
+  padding: 6px 6px 6px 16px; border-radius: 999px;
+  background: var(--v-glass); border: 1px solid var(--v-edge);
+  -webkit-backdrop-filter: blur(20px) saturate(160%); backdrop-filter: blur(20px) saturate(160%);
+}
+.ftkv-chat:focus-within { border-color: rgb(163 150 255 / .55); }
+.ftkv-chat-dich {
+  flex: none; display: none; align-items: center; gap: 6px; max-width: 40%;
+  padding: 3px 4px 3px 10px; border-radius: 999px; background: rgb(163 150 255 / .16);
+  color: var(--v-accent-txt); font-size: 12.5px; font-weight: 500;
+}
+.ftkv-chat-dich.hien { display: inline-flex; }
+.ftkv-chat-dich span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ftkv-chat-dich button { width: 20px; height: 20px; border: 0; border-radius: 999px; background: transparent; cursor: pointer; color: inherit; }
+.ftkv-chat input {
+  flex: 1; min-width: 0; height: 36px; border: 0; outline: 0; background: transparent;
+  color: var(--v-text); font: inherit; font-size: 15px;
+}
+.ftkv-chat input::placeholder { color: var(--v-text-3); }
+
+/* ── Thông báo ── */
+.ftkv-bao {
+  position: absolute; left: 50%; top: 14px; z-index: 6; transform: translate(-50%, -8px);
+  max-width: min(520px, calc(100% - 28px));
+  padding: 9px 16px; border-radius: 999px;
+  background: var(--v-glass); border: 1px solid var(--v-edge);
+  -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
+  font-size: 13.5px; opacity: 0; pointer-events: none;
+  transition: opacity .2s var(--v-ease), transform .2s var(--v-ease);
+}
+.ftkv-bao.hien { opacity: 1; transform: translate(-50%, 0); }
+.ftkv-bao.loi { border-color: rgb(255 110 110 / .5); }
+
+@media (max-width: 640px) and (orientation: portrait) {
+  .ftkv-khung { flex: 0 0 auto; container-type: normal; min-height: 0; }
+  .ftkv-san { width: 100%; }
+  .ftkv-chat { margin-top: auto; }            /* ô chat sát đáy — tầm ngón cái */
+  /* ảnh trên điện thoại quá nhỏ: thẻ nào đè lên cũng che món đang chọn → ẩn thẻ; tên món đã nằm ở chip
+     trong ô chat (bấm chip ✕ = bỏ chọn), ô chat chính là chỗ "sửa món này" */
+  .ftkv-the { display: none; }
+  .ftkv-chat-dich { max-width: 46%; }
+  .ftkv-thanh { flex-wrap: wrap; }
+  .ftkv-nhom { width: 100%; }
+  .ftkv-nhom .ftkv-nut { flex: 1; }
+}
+/* màn lùn (điện thoại nằm ngang): co thanh dưới để ô chat luôn nằm trong màn hình */
+@media (max-height: 480px) {
+  .ftkv { gap: 6px; }
+  .ftkv-khung { min-height: 0; }
+  .ftkv-chip { height: 32px; padding: 0 10px; }
+  .ftkv-chip img { display: none; }
+  .ftkv-nut { height: 30px; }
+  .ftkv-chat input { height: 30px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ftkv-anh, .ftkv-the, .ftkv-nhan, .ftkv-bao, .ftkv-nut { transition: none; }
+}
