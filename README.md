@@ -29,7 +29,11 @@ Link phải bắt đầu bằng `https://`.
 - `<script src="config.js?v=…">`
 - `<script src="main.js?v=…">`
 
-Mã 3D (`js/xt-app.js`) tự lấy số từ `PAGE_VERSION`, không cần sửa thêm.
+Mã 3D (`js/xt-app.js`) và khối Ảnh AI (`anh-ai/ftk_viewport.css`, `.js`, `du_lieu.json`) tự lấy số từ `PAGE_VERSION`, không cần sửa thêm.
+
+## Khối Ảnh AI (`#anh-ai`)
+
+Thư mục `anh-ai/` là bản sinh ra từ gói bàn giao của phiên làm ảnh AI: **không sửa tay** `ftk_viewport.*`, `du_lieu.json` hay ảnh. Cần đổi thì xuất gói mới, chép đè cả thư mục `anh-ai/`, rồi tăng `PAGE_VERSION`. Chữ trong khối nằm ở `index.html`, CSS bọc ngoài ở `style.css` (mục `#anh-ai`), mã nạp lười ở `main.js` (mục "Khối Ảnh AI").
 
 ## Bật lại phần ảnh app
 

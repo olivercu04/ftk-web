@@ -637,6 +637,73 @@ function init() {
       if (document.readyState === 'complete') xtIdle(); else window.addEventListener('load', xtIdle, { once: true });
     } else xtFallback();
   }
+
+  // ───────── Khối Ảnh AI (#anh-ai): thành phần xem ảnh ở anh-ai/ (bản sinh ra từ gói bàn giao — không sửa tay) ─────────
+  // Chỉ tải CSS + mã + dữ liệu + ảnh khi khách cuộn gần tới khối (400 px), và chỉ bắt đầu theo dõi sau load như khối 3D.
+  // Bản giới thiệu không có máy chủ AI: yêu cầu của khách chuyển sang phiên bản dựng sẵn khớp món đó.
+  var aiVp = document.getElementById('anh-ai-vp');
+  if (aiVp) {
+    var AI_GOC = 'anh-ai/', aiV = '?v=' + encodeURIComponent(cfg('PAGE_VERSION') || '1');
+    var aiCho = function (t) { aiVp.innerHTML = ''; var p = document.createElement('p'); p.className = 'anh-ai-cho'; p.textContent = t; aiVp.appendChild(p); };
+    var aiCss = function () {
+      return new Promise(function (ok) {
+        if (document.querySelector('link[data-anh-ai]')) return ok();
+        var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = AI_GOC + 'ftk_viewport.css' + aiV; l.setAttribute('data-anh-ai', '');
+        l.onload = ok; l.onerror = ok; document.head.appendChild(l);
+      });
+    };
+    var aiJs = function () {
+      return new Promise(function (ok, loi) {
+        if (window.FtkViewport) return ok();
+        var s = document.createElement('script'); s.src = AI_GOC + 'ftk_viewport.js' + aiV; s.onload = ok; s.onerror = loi; document.head.appendChild(s);
+      });
+    };
+    // Thành phần gọi scrollIntoView({block:'nearest'}) lên chip phiên bản đang xem để dải cuộn ngang theo kịp. Trên trang
+    // cuộn dài, lệnh đó kéo CẢ TRANG về khối này (vd đang bấm "Đăng ký dùng thử" cuộn tới #lien-he thì bị dừng giữa đường).
+    // Không sửa được anh-ai/ (bản sinh ra) → ở đây chỉ cho chip trong dải cuộn ngang trong dải, không đụng cuộn trang.
+    // Bỏ đoạn này khi gói Ảnh AI mới đã tự cuộn dải bằng scrollLeft.
+    var aiSiv = Element.prototype.scrollIntoView;
+    if (!aiSiv.__ftkAnhAi) {
+      var aiSivMoi = function () {
+        var ban = this.closest && this.closest('#anh-ai .ftkv-ban');
+        if (!ban) return aiSiv.apply(this, arguments);
+        var r = this.getBoundingClientRect(), b = ban.getBoundingClientRect();
+        if (r.left < b.left) ban.scrollLeft -= b.left - r.left;
+        else if (r.right > b.right) ban.scrollLeft += r.right - b.right;
+      };
+      aiSivMoi.__ftkAnhAi = true;
+      Element.prototype.scrollIntoView = aiSivMoi;
+    }
+    var aiBat = function () {
+      Promise.all([aiCss(), aiJs(), fetch(AI_GOC + 'du_lieu.json' + aiV).then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status); return r.json();
+      })]).then(function (kq) {
+        var D = kq[2];
+        aiVp.textContent = '';
+        var vp = new window.FtkViewport(aiVp, new window.FtkNguon.Tinh(D.canh, AI_GOC), {
+          phimToanTrang: false,
+          guiYeuCau: async function (yc) {
+            var dich = yc.mon && D.dung[yc.mon];
+            if (!dich) { vp.bao('Bản giới thiệu: thử chọn sofa hoặc bàn trà rồi gửi yêu cầu.'); return; }
+            vp.bao('Bản giới thiệu — đang dùng kết quả dựng sẵn…', false, true);
+            await new Promise(function (r) { setTimeout(r, 650); });
+            await vp.chonBan(dich);
+          }
+        });
+        return vp.tai();
+      }).catch(function () { aiCho('Chưa tải được ảnh mẫu — thử tải lại trang.'); });
+    };
+    if ('IntersectionObserver' in window) {
+      var aiWatch = function () {
+        var aiIo = new IntersectionObserver(function (es) {
+          if (es.some(function (e) { return e.isIntersecting; })) { aiIo.disconnect(); aiBat(); }
+        }, { rootMargin: '400px 0px 400px 0px' });
+        aiIo.observe(aiVp);
+      };
+      var aiIdle = function () { if (window.requestIdleCallback) window.requestIdleCallback(aiWatch, { timeout: 1500 }); else setTimeout(aiWatch, 200); };
+      if (document.readyState === 'complete') aiIdle(); else window.addEventListener('load', aiIdle, { once: true });
+    } else aiBat();
+  }
 }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
