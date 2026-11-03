@@ -12,6 +12,10 @@
 
 Ảnh tạm sẽ được thay bằng cảnh quay thật.
 
+## Ảnh AI
+
+Ảnh trong khối "Ảnh AI" (`anh-ai/anh/`) do AI (ChatGPT) vẽ theo mô tả của FTK, dùng làm kết quả dựng sẵn cho bản giới thiệu. Không phải ảnh chụp từ app 3D.
+
 ## Thư viện
 
 - three.js 0.160.1 (kèm OrbitControls, RoundedBoxGeometry, RoomEnvironment): MIT License, xem `vendor/three/LICENSE`.

@@ -20,10 +20,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="style.css?v=1">
+<link rel="stylesheet" href="style.css?v=2">
 <script type="importmap">{"imports":{"three":"./vendor/three/three.module.min.js","three/addons/":"./vendor/three/addons/"}}</script>
-<script src="config.js?v=1"></script>
-<script src="main.js?v=1"></script>
+<script src="config.js?v=2"></script>
+<script src="main.js?v=2"></script>
 </head>
 <body id="top">
 <div class="sky" aria-hidden="true"><div class="sky-neb"></div><canvas class="sky-far"></canvas><canvas class="sky-near"></canvas><div class="sky-grain"></div><div class="sky-vig"></div></div>
@@ -54,6 +54,7 @@
           <ul>
             <template data-an="anh-app"><li><a data-to="thao-tac">Thao tác</a></li></template>
             <li><a href="#xem-thu">Xem thử 3D</a></li>
+            <li><a href="#anh-ai">Ảnh AI</a></li>
             <li><a href="#tinh-nang">Tính năng</a></li>
             <li><a href="#danh-cho-ai">Người dùng</a></li>
             <li><a href="#cai-dat">Cài đặt</a></li>
@@ -312,6 +313,23 @@
         </div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ═════════ #anh-ai — khối Ảnh AI (gói bàn giao 03/11 từ FTK_AI_Server).
+     Đừng sửa anh-ai/ftk_viewport.* / du_lieu.json / ảnh: đó là bản sinh ra, cần đổi thì xuất gói lại.
+     Chữ trong khối + CSS bọc ngoài (#anh-ai …, ở style.css) là của trang. Nạp lười: main.js mục "Khối Ảnh AI". ═════════ -->
+<section id="anh-ai" class="section" aria-labelledby="anh-ai-tieu-de">
+  <div class="container">
+    <div class="sec-head" data-reveal>
+      <div>
+        <p class="eyebrow">Ảnh AI · thử nghiệm</p>
+        <h2 id="anh-ai-tieu-de" class="h2">Tả bằng lời, nhận ảnh&nbsp;— rồi đổi từng món</h2>
+      </div>
+      <p class="sec-lead">Rê chuột hoặc chạm vào ảnh để thấy từng món, bấm để chọn. Gõ yêu cầu cho món đang chọn — chỉ món đó đổi, mọi thứ khác giữ nguyên. Xem lại từng phiên bản ở dải bên dưới.</p>
+    </div>
+    <div id="anh-ai-vp" class="anh-ai-vp"><p class="anh-ai-cho">Đang tải ảnh mẫu…</p></div>
+    <p class="anh-ai-ghi">Bản giới thiệu dùng kết quả dựng sẵn: ảnh đầu do AI vẽ theo mô tả, sofa đổi nhung xanh navy (AI vẽ lại riêng món), mặt bàn đổi tông gỗ óc chó (tô lại tại chỗ, giữ vân). Ảnh không phải hình chụp từ app 3D.</p>
   </div>
 </section>
 
