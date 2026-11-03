@@ -658,22 +658,6 @@ function init() {
         var s = document.createElement('script'); s.src = AI_GOC + 'ftk_viewport.js' + aiV; s.onload = ok; s.onerror = loi; document.head.appendChild(s);
       });
     };
-    // Thành phần gọi scrollIntoView({block:'nearest'}) lên chip phiên bản đang xem để dải cuộn ngang theo kịp. Trên trang
-    // cuộn dài, lệnh đó kéo CẢ TRANG về khối này (vd đang bấm "Đăng ký dùng thử" cuộn tới #lien-he thì bị dừng giữa đường).
-    // Không sửa được anh-ai/ (bản sinh ra) → ở đây chỉ cho chip trong dải cuộn ngang trong dải, không đụng cuộn trang.
-    // Bỏ đoạn này khi gói Ảnh AI mới đã tự cuộn dải bằng scrollLeft.
-    var aiSiv = Element.prototype.scrollIntoView;
-    if (!aiSiv.__ftkAnhAi) {
-      var aiSivMoi = function () {
-        var ban = this.closest && this.closest('#anh-ai .ftkv-ban');
-        if (!ban) return aiSiv.apply(this, arguments);
-        var r = this.getBoundingClientRect(), b = ban.getBoundingClientRect();
-        if (r.left < b.left) ban.scrollLeft -= b.left - r.left;
-        else if (r.right > b.right) ban.scrollLeft += r.right - b.right;
-      };
-      aiSivMoi.__ftkAnhAi = true;
-      Element.prototype.scrollIntoView = aiSivMoi;
-    }
     var aiBat = function () {
       Promise.all([aiCss(), aiJs(), fetch(AI_GOC + 'du_lieu.json' + aiV).then(function (r) {
         if (!r.ok) throw new Error('HTTP ' + r.status); return r.json();

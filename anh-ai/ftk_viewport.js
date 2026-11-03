@@ -71,6 +71,14 @@
   const NHAN_RGB = [163, 150, 255];
   const BO_TOI_DA = 8;                              // số phiên bản giữ trong bộ đệm
   const VIEN_PX = 2;                                // độ dày viền (px ảnh gốc), mỗi phía
+  // Tên loại hiện trên thẻ món: loai_ftk là tên thư mục kho FTK (tiếng Anh, có _) → tên tiếng Việt cho khách.
+  // Loại chưa có trong bảng: hiện mã, bỏ dấu _ (thêm loại mới thì thêm 1 dòng ở đây).
+  const LOAI_VI = {
+    Sofa_general: 'Sofa', Armchair: 'Ghế bành', Table_tea_coffee: 'Bàn trà', Side_Table: 'Bàn góc',
+    Rug: 'Thảm', Floor_Lamps: 'Đèn cây', Chandelier: 'Đèn chùm',
+    Painting_tranh_treo_tuong: 'Tranh treo tường', Tree_Leaf_flowers_and_vases: 'Cây, hoa & bình',
+  };
+  const tenLoai = loai => LOAI_VI[loai] || (loai || '—').replace(/_/g, ' ');
   const SVG_X = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>';
 
   function taiAnh(url) {
@@ -451,7 +459,7 @@
       const q = s => the.querySelector(s);
       q('[data-x="stt"]').textContent = `${this.chon} / ${this.pb.mon.length}`;
       q('[data-x="ten"]').textContent = m.ten_vi;
-      q('[data-x="loai"]').textContent = (m.loai_ftk || '—').replace(/_/g, ' ');
+      q('[data-x="loai"]').textContent = tenLoai(m.loai_ftk);
       const lan = [...this.canh.phien_ban].reverse().find(p => p.sua && p.sua.mon === m.id && this._tren_duong(p.id));
       q('[data-x="doi"]').textContent = lan ? `${lan.id} — “${lan.sua.yeu_cau_khach || ''}”` : 'chưa đổi';
     }
@@ -490,7 +498,12 @@
         ban.append(b);
       }
       const cur = ban.querySelector('[aria-current="true"]');
-      if (cur) cur.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+      // chỉ cuộn DẢI theo chiều ngang: scrollIntoView kéo cả trang khi khối nằm trong trang dài (ftk-web 03/11)
+      if (cur) {
+        const rb = ban.getBoundingClientRect(), rc = cur.getBoundingClientRect();
+        if (rc.left < rb.left) ban.scrollLeft -= rb.left - rc.left;
+        else if (rc.right > rb.right) ban.scrollLeft += rc.right - rb.right;
+      }
       this.el.hoanTac.disabled = this.pb.tu == null;
       this.el.lamLai.disabled = !this.canh.phien_ban.some(p => p.tu === this.pb.id);
     }
